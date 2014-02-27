@@ -1,15 +1,17 @@
-from django.http import HttpResponse, Http404, HttpResponseRedirect
-from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth import logout
 from django.template import RequestContext
-from tasks.forms import RegistrationForm, TaskListSaveForm
+from tasks.forms import RegistrationForm, TaskSaveForm
+from django.contrib.auth.decorators import login_required
 from tasks.models import *
 
-
+@login_required(login_url='/login/')
 def main_page(request):
+    # user = User.objects.get(username=request.user)
+    tasks = Task.objects.filter(user_id=request.user)
     return render_to_response(
-        'main_page.html', RequestContext(request)
+        'main_page.html', RequestContext(request, {'tasklist':  tasks})
     )
 
 def logout_page(request):
@@ -25,7 +27,7 @@ def register_page(request):
                 password=form.cleaned_data['password1'],
                 email=form.cleaned_data['email']
             )
-            return HttpResponseRedirect('/register/success/')
+            return HttpResponseRedirect('/')
     else:
         form = RegistrationForm()
     variables = RequestContext(request, {
@@ -35,24 +37,18 @@ def register_page(request):
         'registration/register.html', variables
     )
 
-def todolist_save_page(request):
+def task_save_page(request):
     if request.method == 'POST':
-        form = TaskListSaveForm(request.POST)
+        form = TaskSaveForm(request.POST)
         if form.is_valid():
             task, dummy = Task.objects.get_or_create(
-                title=form.cleaned_data['title']
+                title=form.cleaned_data['title'],
+                user=request.user
             )
-            todolist, created = TaskList.objects.get_or_create(
-                user=request.user,
-                task=task
-            )
-            todolist.title = form.cleaned_data['title']
-            todolist.save()
-            return HttpResponseRedirect(
-                '/user/%s/' % request.user.username
-            )
+            task.save()
+            return HttpResponseRedirect('/')
     else:
-        form = TaskListSaveForm()
+        form = TaskSaveForm()
     variables = RequestContext(request, {
         'form': form
     })

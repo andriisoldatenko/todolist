@@ -5,13 +5,17 @@
 {% block head %}Todo List for {{ username }}{% endblock %}
 
 {% block content %}
-    {% if tasklist %}
-        <ul>
-            {% for task in tasklist %}
-                <li>{{ task.title }}</li>
-            {% endfor %}
-        </ul>
+    {% if user.is_authenticated %}
+        {% if tasklist %}
+            <ul>
+                {% for task in tasklist %}
+                    <li>{{ task.title }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tasks found.</p>
+        {% endif %}
     {% else %}
-        <p>No tasks found.</p>
+        user is NOT logged in
     {% endif %}
 {% endblock %}

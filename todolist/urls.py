@@ -15,5 +15,5 @@ urlpatterns = patterns('',
    url(r'^register/success/$', TemplateView.as_view(template_name="registration/register_success.html")),
 
    # Account management
-   (r'^save/$', todolist_save_page),
+   (r'^save/$', task_save_page),
 )

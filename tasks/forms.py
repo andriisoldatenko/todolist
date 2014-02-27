@@ -34,10 +34,9 @@ class RegistrationForm(forms.Form):
         raise forms.ValidationError('Username is already taken.')
 
 
-class TaskListSaveForm(forms.Form):
-    title = forms.CharField(
-        label=u'Title',
-        widget=forms.TextInput(attrs={'size': 64})
-    )
+class TaskSaveForm(forms.Form):
+    title = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
+    priority = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
+    done = forms.BooleanField()
 
 
