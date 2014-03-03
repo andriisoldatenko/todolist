@@ -1,13 +1,16 @@
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
+import os.path
+from django.conf import settings
 from tasks.views import *
-# Uncomment the next two lines to enable the admin:
-# from django.contrib import admin
-# admin.autodiscover()
+
+site_media = os.path.join(
+    os.path.dirname(__file__), 'static'
+)
 
 urlpatterns = patterns('',
    url(r'^$', main_page),
-
+   url(r'^tasks/', include('tasks.urls')),
    # Session management
    url(r'^login/$', 'django.contrib.auth.views.login'),
    url(r'^logout/$', logout_page),
@@ -15,5 +18,7 @@ urlpatterns = patterns('',
    url(r'^register/success/$', TemplateView.as_view(template_name="registration/register_success.html")),
 
    # Account management
-   (r'^save/$', task_save_page),
+   # (r'^create/$', task_save_page),
+   url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+       {'document_root': settings.STATICFILES_DIRS} ),
 )

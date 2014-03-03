@@ -1,7 +1,8 @@
 import re
 from django.contrib.auth.models import User
 from django import forms
-
+from django.forms import ModelForm, Select, TextInput
+from tasks.models import Task
 class RegistrationForm(forms.Form):
     username = forms.CharField(label=u'Username', max_length=30)
     email = forms.EmailField(label=u'Email')
@@ -34,9 +35,16 @@ class RegistrationForm(forms.Form):
         raise forms.ValidationError('Username is already taken.')
 
 
-class TaskSaveForm(forms.Form):
-    title = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
-    priority = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
-    done = forms.BooleanField()
+class TaskForm(ModelForm):
+    class Meta:
+        model = Task
+        fields = ['title', 'priority', 'done']
+        widgets = {
+            'title': TextInput(attrs={'size': 64}),
+            'priority': Select(choices=Task.PRIORITY_CHOICES)
+        }
+    # title = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
+    # priority = forms.CharField(widget=forms.TextInput(attrs={'size': 64}))
+    # done = forms.BooleanField(required=False)
 
 
