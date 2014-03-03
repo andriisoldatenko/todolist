@@ -57,6 +57,7 @@ def task_create(request, template_name='tasks/task_form.html'):
     if form.is_valid():
         task, dummy = Task.objects.get_or_create(
             title=form.cleaned_data['title'],
+            priority=form.cleaned_data['priority'],
             user=request.user
         )
         task.save()
