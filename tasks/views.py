@@ -4,7 +4,7 @@ from django.contrib.auth import logout
 from django.template import RequestContext
 from tasks.forms import RegistrationForm, TaskForm
 from django.contrib.auth.decorators import login_required
-from tasks.models import Task
+from tasks.models import Task, User
 
 @login_required(login_url='/login/')
 def main_page(request):
@@ -39,7 +39,7 @@ def register_page(request):
 @login_required(login_url='/login/')
 def task_list(request, template_name='tasks/task_list.html'):
     tasks = Task.objects.filter(user_id=request.user)
-    return render(request, template_name, {'tasks': tasks})
+    return render(request, template_name, {'user': request.user, 'tasks': tasks})
 
 
 @login_required(login_url='/login/')
@@ -48,8 +48,8 @@ def task_update(request, pk, template_name='tasks/task_form.html'):
     form = TaskForm(request.POST or None, instance=task)
     if form.is_valid():
         form.save()
-        return redirect('task_list')
-    return render(request,template_name, {'form': form})
+        return HttpResponseRedirect('/')
+    return render(request, template_name, {'form': form})
 
 @login_required(login_url='/login/')
 def task_create(request, template_name='tasks/task_form.html'):
@@ -61,7 +61,7 @@ def task_create(request, template_name='tasks/task_form.html'):
             user=request.user
         )
         task.save()
-        return redirect('task_list')
+        return HttpResponseRedirect('/')
     return render(request, template_name, {'form': form})
 
 @login_required
@@ -69,5 +69,5 @@ def task_delete(request, pk, template_name='tasks/task_confirm_delete.html'):
     task = get_object_or_404(Task, pk=pk)
     if request.method == 'POST':
         task.delete()
-        return redirect('task_list')
+        return HttpResponseRedirect('/')
     return render(request, template_name, {'task':task})

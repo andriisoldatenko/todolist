@@ -8,8 +8,9 @@ v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
 v1_api.register(TaskResource())
 
+
 urlpatterns = patterns('',
-   url(r'^$', main_page),
+   url(r'^$', 'tasks.views.task_list'),
    url(r'^tasks/', include('tasks.urls')),
    # Session management
    url(r'^login/$', 'django.contrib.auth.views.login'),
