@@ -5,6 +5,7 @@ pip install -r requirements.txt
 
 manage.py syncdb
 
+# test
 Simple Rest Api
 ===
 
