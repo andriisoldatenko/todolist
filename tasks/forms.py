@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django import forms
 from django.forms import ModelForm, Select, TextInput
 from tasks.models import Task
+
 class RegistrationForm(forms.Form):
     username = forms.CharField(label=u'Username', max_length=30)
     email = forms.EmailField(label=u'Email')
