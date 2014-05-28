@@ -2,3 +2,5 @@
 .idea/
 *.sqlite3
 *.sql3
+venv
+staticfiles
